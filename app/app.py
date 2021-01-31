@@ -1,10 +1,11 @@
-import os
-import logging
 import json
+import logging
 import operator
+import os
+
+import discord
 import requests
 from bs4 import BeautifulSoup
-import discord
 
 client = discord.Client()
 
