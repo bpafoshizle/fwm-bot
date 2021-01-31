@@ -14,6 +14,7 @@ def get_quote():
   quote = json_data[0]['q'] + " -" + json_data[0]['a']
   return(quote)
 
+
 def get_word_of_the_day():
     response = requests.get("https://www.merriam-webster.com/word-of-the-day")
     soup = BeautifulSoup(response.text)
@@ -26,14 +27,17 @@ def get_word_of_the_day():
         soup.find("div", class_="wod-definition-container").find_all('p' ,recursive=False)
     ))
 
+    return word, word_syllables, part_of_speech, definitions
+
+def format_wod_response_text(word, word_syllables, part_of_speech, definitions):
     nl = "\n"
     wod_response = f"""\
 Word of the day: {word} [{word_syllables}], {part_of_speech}
 Definitions:
 {nl.join(definitions)}"""
 
-    return wod_response
-    
+def format_wod_response_embed(word, word_syllables, part_of_speech, definitions):
+    pass
 
 @client.event
 async def on_ready():
@@ -52,8 +56,8 @@ async def on_message(message):
         await message.channel.send(quote)
     
     if message.content.startswith('$wotd'):
-        wod = get_word_of_the_day()
+        wod = format_wod_response_text(get_word_of_the_day())
         await message.channel.send(wod)
 
 logging.info(f'running client: {client}')
-client.run(os.getenv('TOKEN'))
+client.run(os.getenv('DISCORD_TOKEN'))
