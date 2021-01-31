@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: egroup-bot
+  namespace: egroup-bot
+  labels:
+    app: egroup-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: egroup-bot
+  template:
+    metadata:
+      labels:
+        app: egroup-bot
+    spec:
+      containers:
+      - name: egroup-bot
+        image: ghcr.io/bpafoshizle/egroup-bot/egroup-bot:latest
