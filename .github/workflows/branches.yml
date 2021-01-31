@@ -3,6 +3,16 @@ name: Lint-Build-Test-Branches
 # Run this workflow every time a new commit pushed to your repository
 on: push
 jobs:
+  dummy-test-job:
+    name: Run scratch code to understand GH actions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: run test command
+      - run: |
+          echo github.repository: ${{ github.repository }}
+          echo github.ref: ${{ github.ref }}
+  
   # Set the job key. The key is displayed as the job name
   # when a job name is not provided
   format-and-lint:
