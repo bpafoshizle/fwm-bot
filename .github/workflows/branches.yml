@@ -25,7 +25,7 @@ jobs:
   
   build-test-docker:
     # Ensure test job passes before pushing image.
-    needs: super-lint
+    needs: format-and-lint
     # Name the Job
     name: Build and run docker tests
     # Set the type of machine to run on
