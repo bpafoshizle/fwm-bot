@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: egroup-bot
-  namespace: egroup
+  namespace: egroup-bot
   labels:
     app: egroup-bot
 spec:
