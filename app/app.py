@@ -3,11 +3,12 @@ import logging
 import operator
 import os
 
-import discord
+# import discord
 import requests
 from bs4 import BeautifulSoup
+from discord.ext import commands  # , tasks
 
-client = discord.Client()
+bot = commands.Bot(command_prefix=".")
 
 
 def get_quote():
@@ -51,27 +52,26 @@ def format_wod_response_embed(word, word_syllables, part_of_speech, definitions)
     pass
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f"Logged in as {client.user}")
+    print(f"Logged in as {bot.user}")
 
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith("$hello"):
-        await message.channel.send("Hello!")
-
-    if message.content.startswith("$inspire"):
-        quote = get_quote()
-        await message.channel.send(quote)
-
-    if message.content.startswith("$wotd"):
-        wod = format_wod_response_text(*get_word_of_the_day())
-        await message.channel.send(wod)
+@bot.command()
+async def hello(ctx):
+    await ctx.send("Hello!")
 
 
-logging.info("running client: %s", client)
-client.run(os.getenv("DISCORD_TOKEN"))
+@bot.command()
+async def inspire(ctx):
+    await ctx.send(get_quote())
+
+
+@bot.command()
+async def wotd(ctx):
+    wod = format_wod_response_text(*get_word_of_the_day())
+    await ctx.send(wod)
+
+
+logging.info("running bot: %s", bot)
+bot.run(os.getenv("DISCORD_TOKEN"))

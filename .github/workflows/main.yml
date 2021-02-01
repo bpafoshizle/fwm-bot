@@ -9,6 +9,8 @@ on:
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
+env:
+  IMAGE_NAME: egroup-bot
 
 jobs:
   show-key-values:
