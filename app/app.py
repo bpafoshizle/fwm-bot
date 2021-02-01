@@ -3,12 +3,13 @@ import logging
 import operator
 import os
 
-import discord
-from discord.ext import commands
+# import discord
 import requests
 from bs4 import BeautifulSoup
+from discord.ext import tasks, commands
 
-bot = commands.Bot(command_prefix = '.')
+bot = commands.Bot(command_prefix=".")
+
 
 def get_quote():
     response = requests.get("https://zenquotes.io/api/random")
@@ -55,18 +56,22 @@ def format_wod_response_embed(word, word_syllables, part_of_speech, definitions)
 async def on_ready():
     print(f"Logged in as {bot.user}")
 
+
 @bot.command()
 async def hello(ctx):
     await ctx.send("Hello!")
+
 
 @bot.command()
 async def inspire(ctx):
     await ctx.send(get_quote())
 
+
 @bot.command()
 async def wotd(ctx):
     wod = format_wod_response_text(*get_word_of_the_day())
     await ctx.send(wod)
+
 
 logging.info("running bot: %s", bot)
 bot.run(os.getenv("DISCORD_TOKEN"))
