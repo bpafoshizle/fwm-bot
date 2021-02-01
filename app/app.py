@@ -4,11 +4,11 @@ import operator
 import os
 
 import discord
+from discord.ext import commands
 import requests
 from bs4 import BeautifulSoup
 
-client = discord.Client()
-
+bot = commands.Bot(command_prefix = '.')
 
 def get_quote():
     response = requests.get("https://zenquotes.io/api/random")
@@ -51,27 +51,22 @@ def format_wod_response_embed(word, word_syllables, part_of_speech, definitions)
     pass
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print(f"Logged in as {client.user}")
+    print(f"Logged in as {bot.user}")
 
+@bot.command()
+async def hello(ctx):
+    await ctx.send("Hello!")
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
+@bot.command()
+async def inspire(ctx):
+    await ctx.send(get_quote())
 
-    if message.content.startswith("$hello"):
-        await message.channel.send("Hello!")
+@bot.command()
+async def wotd(ctx):
+    wod = format_wod_response_text(*get_word_of_the_day())
+    await ctx.send(wod)
 
-    if message.content.startswith("$inspire"):
-        quote = get_quote()
-        await message.channel.send(quote)
-
-    if message.content.startswith("$wotd"):
-        wod = format_wod_response_text(*get_word_of_the_day())
-        await message.channel.send(wod)
-
-
-logging.info("running client: %s", client)
-client.run(os.getenv("DISCORD_TOKEN"))
+logging.info("running bot: %s", bot)
+bot.run(os.getenv("DISCORD_TOKEN"))
