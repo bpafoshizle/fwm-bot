@@ -17,4 +17,4 @@ spec:
     spec:
       containers:
       - name: egroup-bot
-        image: ghcr.io/bpafoshizle/egroup-bot/egroup-bot:latest
+        image: ghcr.io/bpafoshizle/egroup-bot:latest
