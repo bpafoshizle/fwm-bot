@@ -45,7 +45,7 @@ jobs:
       - name: build image
         run: |
           docker buildx build \
-          --tag $IMAGE_NAME \
+          --load --tag $IMAGE_NAME \
           --platform linux/amd64,linux/arm64 . \
           --file Dockerfile
 
