@@ -15,6 +15,7 @@ jobs:
         run: |
           echo github.event_name: ${{ github.event_name }}
           echo github.ref: ${{ github.ref }}
+
   
   # Set the job key. The key is displayed as the job name
   # when a job name is not provided
@@ -45,13 +46,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout code
+        uses: actions/checkout@v2
+      
+      # https://github.com/docker/setup-qemu-action
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        
+      # https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-      - name: Run docker tests
+      - name: build image
         run: |
-          if [ -f docker-compose.test.yml ]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-          else
-            docker build . --file Dockerfile
-          fi
+          docker buildx build \
+          --platform linux/amd64,linux/arm64 . \
+          --file Dockerfile

@@ -18,3 +18,5 @@ spec:
       containers:
       - name: egroup-bot
         image: ghcr.io/bpafoshizle/egroup-bot:latest
+      imagePullSecrets:
+      - name: ghcr-egroup-bot
