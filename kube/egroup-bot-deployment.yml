@@ -18,5 +18,11 @@ spec:
       containers:
       - name: egroup-bot
         image: ghcr.io/bpafoshizle/egroup-bot:latest
+        env:
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: discord
+              key: token
       imagePullSecrets:
       - name: ghcr-egroup-bot
