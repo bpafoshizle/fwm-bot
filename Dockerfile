@@ -1,4 +1,4 @@
-FROM arm64v8/python:3.9.1-alpine
+FROM python:3.9.1-alpine
 RUN apk --no-cache add gcc=9.3.0-r2 musl-dev=1.1.24-r10
 
 WORKDIR /usr/src/app
