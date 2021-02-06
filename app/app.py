@@ -1,3 +1,5 @@
+import asyncio
+import datetime
 import json
 import logging
 import operator
@@ -6,7 +8,10 @@ import os
 # import discord
 import requests
 from bs4 import BeautifulSoup
-from discord.ext import commands  # , tasks
+from discord.ext import commands, tasks
+
+LOGLEVEL = os.environ.get("LOGLEVEL", "WARNING").upper()
+logging.basicConfig(level=LOGLEVEL)
 
 bot = commands.Bot(command_prefix=".")
 
@@ -20,7 +25,7 @@ def get_quote():
 
 def get_word_of_the_day():
     response = requests.get("https://www.merriam-webster.com/word-of-the-day")
-    soup = BeautifulSoup(response.text)
+    soup = BeautifulSoup(response.text, features="html.parser")
     logging.debug(
         "received response from https://www.merriam-webster.com/word-of-the-day"
     )
@@ -52,9 +57,21 @@ def format_wod_response_embed(word, word_syllables, part_of_speech, definitions)
     pass
 
 
+async def wait_until(dt):
+    # sleep until the specified datetime
+    now = datetime.datetime.now()
+    await asyncio.sleep((dt - now).total_seconds())
+
+
+def calc_tomorrow_6am():
+    tmrw_6am = datetime.datetime.now() + datetime.timedelta(days=1)
+    tmrw_6am = tmrw_6am.replace(hour=6, minute=0, second=0, microsecond=0)
+    return tmrw_6am
+
+
 @bot.event
 async def on_ready():
-    print(f"Logged in as {bot.user}")
+    logging.info("Logged in as %s", bot.user)
 
 
 @bot.command()
@@ -72,6 +89,27 @@ async def wotd(ctx):
     wod = format_wod_response_text(*get_word_of_the_day())
     await ctx.send(wod)
 
+
+@tasks.loop(hours=24)
+async def wotd_task():
+    logging.info("channel id %s", os.getenv("DSCRD_CHNL_GENERAL"))
+    chnl = bot.get_channel(int(os.getenv("DSCRD_CHNL_GENERAL")))
+    logging.info("Got channel %s", chnl)
+    await chnl.send(format_wod_response_text(*get_word_of_the_day()))
+
+
+@wotd_task.before_loop
+async def before():
+    await bot.wait_until_ready()
+    logging.info("wotd_task_before_loop: bot ready")
+    tmrw_6am = calc_tomorrow_6am()
+    logging.info("wotd_task_before_loop: waiting until: %s", tmrw_6am)
+    await wait_until(tmrw_6am)
+    logging.info("wotd_task_before_loop: waited until 6am")
+
+
+# Start tasks
+wotd_task.start()
 
 logging.info("running bot: %s", bot)
 bot.run(os.getenv("DISCORD_TOKEN"))
