@@ -19,6 +19,8 @@ spec:
       - name: egroup-bot
         image: ghcr.io/bpafoshizle/egroup-bot:latest
         env:
+        - name: LOGLEVEL
+          value: "INFO"
         - name: DISCORD_TOKEN
           valueFrom:
             secretKeyRef:
