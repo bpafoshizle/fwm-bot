@@ -10,7 +10,7 @@ import requests
 from bs4 import BeautifulSoup
 from discord.ext import commands, tasks
 
-LOGLEVEL = os.environ.get('LOGLEVEL', 'WARNING').upper()
+LOGLEVEL = os.environ.get("LOGLEVEL", "WARNING").upper()
 logging.basicConfig(level=LOGLEVEL)
 
 bot = commands.Bot(command_prefix=".")
