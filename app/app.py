@@ -5,7 +5,7 @@ import logging
 import operator
 import os
 
-# import discord
+import discord
 import requests
 from bs4 import BeautifulSoup
 from discord.ext import commands, tasks
@@ -54,7 +54,14 @@ Definitions:
 
 
 def format_wod_response_embed(word, word_syllables, part_of_speech, definitions):
-    pass
+    embed = discord.Embed(
+        title="Word of the Day Post", description="The word du jour", color=0x9D2235
+    )
+    embed.add_field(name="Today's Word", value=word, inline=False)
+    embed.add_field(name="Part of Speech", value=part_of_speech)
+    embed.add_field(name="Syllables", value=word_syllables, inline=False)
+    embed.add_field(name="Definition(s)", value=definitions)
+    return embed
 
 
 async def wait_until(dt):
@@ -86,8 +93,8 @@ async def inspire(ctx):
 
 @bot.command()
 async def wotd(ctx):
-    wod = format_wod_response_text(*get_word_of_the_day())
-    await ctx.send(wod)
+    wod = format_wod_response_embed(*get_word_of_the_day())
+    await ctx.send(embed=wod)
 
 
 @tasks.loop(hours=24)
@@ -95,7 +102,7 @@ async def wotd_task():
     logging.info("channel id %s", os.getenv("DSCRD_CHNL_GENERAL"))
     chnl = bot.get_channel(int(os.getenv("DSCRD_CHNL_GENERAL")))
     logging.info("Got channel %s", chnl)
-    await chnl.send(format_wod_response_text(*get_word_of_the_day()))
+    await chnl.send(embed=format_wod_response_embed(*get_word_of_the_day()))
 
 
 @wotd_task.before_loop
