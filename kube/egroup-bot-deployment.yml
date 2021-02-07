@@ -26,47 +26,45 @@ spec:
             secretKeyRef:
               name: discord
               key: token
-        - name: DSCRD_PROD_CHNL_BOT_TESTING
+        - name: DSCRD_CHNL_BOT_TESTING
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-bot-testing
-        - name: DSCRD_PROD_CHNL_GENERAL
+        - name: DSCRD_CHNL_GENERAL
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-general
-        - name: DSCRD_PROD_CHNL_MEAL_PICS
+        - name: DSCRD_CHNL_MEAL_PICS
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-meal-pics
-        - name: DSCRD_PROD_CHNL_SPORTS
+        - name: DSCRD_CHNL_SPORTS
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-sports
-        - name: DSCRD_PROD_CHNL_POLITICS
+        - name: DSCRD_CHNL_POLITICS
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-politics
-        - name: DSCRD_PROD_CHNL_MONEY
+        - name: DSCRD_CHNL_MONEY
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-money
-        - name: DSCRD_PROD_CHNL_GAMING
+        - name: DSCRD_CHNL_GAMING
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-gaming
-        - name: DSCRD_PROD_CHNL_BOT_FEATURE_REQUESTS
+        - name: DSCRD_CHNL_BOT_FEATURE_REQUESTS
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-bot-feature-requests
-
-
       imagePullSecrets:
       - name: ghcr-egroup-bot
