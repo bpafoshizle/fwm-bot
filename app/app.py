@@ -1,17 +1,20 @@
 import asyncio
-import datetime
 import json
 import logging
 import operator
 import os
+from datetime import datetime, timedelta, timezone
 
 import discord
+import pytz
 import requests
 from bs4 import BeautifulSoup
 from discord.ext import commands, tasks
 
 LOGLEVEL = os.environ.get("LOGLEVEL", "WARNING").upper()
 logging.basicConfig(level=LOGLEVEL)
+
+us_central_tz = pytz.timezone("US/Central")
 
 bot = commands.Bot(command_prefix=".")
 
@@ -65,15 +68,17 @@ def format_wod_response_embed(word, word_syllables, part_of_speech, definitions)
 
 
 async def wait_until(dt):
-    # sleep until the specified datetime
-    now = datetime.datetime.now()
+    """ Sleep until the specified datetime. Expects UTC """
+    now = datetime.now(timezone.utc)
     await asyncio.sleep((dt - now).total_seconds())
 
 
 def calc_tomorrow_6am():
-    tmrw_6am = datetime.datetime.now() + datetime.timedelta(days=1)
-    tmrw_6am = tmrw_6am.replace(hour=6, minute=0, second=0, microsecond=0)
-    return tmrw_6am
+    """ Calculate tomorrow 6am in US Central time. Convert to UTC. Return. """
+    tmrw_6am_ct = datetime.now(us_central_tz) + timedelta(days=1)
+    tmrw_6am_ct = tmrw_6am_ct.replace(hour=6, minute=0, second=0, microsecond=0)
+    tmrw_6am_utc = tmrw_6am_ct.astimezone(timezone.utc)
+    return tmrw_6am_utc
 
 
 @bot.event
