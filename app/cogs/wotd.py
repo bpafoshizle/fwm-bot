@@ -5,9 +5,8 @@ import os
 import discord
 import requests
 from bs4 import BeautifulSoup
-from discord.ext import commands, tasks
-
 from cogs.utils.timing import calc_tomorrow_6am, wait_until
+from discord.ext import commands, tasks
 
 
 class WordOfTheDay(commands.Cog):
