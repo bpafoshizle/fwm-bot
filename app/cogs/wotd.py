@@ -7,12 +7,13 @@ import requests
 from bs4 import BeautifulSoup
 from discord.ext import commands, tasks
 
-from .utils.timing import calc_tomorrow_6am, wait_until
+from cogs.utils.timing import calc_tomorrow_6am, wait_until
 
 
 class WordOfTheDay(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        # pylint: disable=no-member
         self.wotd_task.start()
 
     @commands.command()
