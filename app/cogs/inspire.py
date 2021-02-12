@@ -1,6 +1,6 @@
 import json
 
-import requests
+import aiohttp
 from discord.ext import commands
 
 
@@ -10,10 +10,12 @@ class InspireQuote(commands.Cog):
 
     @commands.command()
     async def inspire(self, ctx):
-        await ctx.send(self.get_quote())
+        await ctx.send(await self.get_quote())
 
-    def get_quote(self):
-        response = requests.get("https://zenquotes.io/api/random")
-        json_data = json.loads(response.text)
-        quote = json_data[0]["q"] + " -" + json_data[0]["a"]
-        return quote
+    async def get_quote(self):
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://zenquotes.io/api/random") as r:
+                if r.status == 200:
+                    json_data = json.loads(await r.text())
+                    quote = json_data[0]["q"] + " -" + json_data[0]["a"]
+                    return quote
