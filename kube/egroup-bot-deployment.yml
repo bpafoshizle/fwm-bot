@@ -21,6 +21,16 @@ spec:
         env:
         - name: LOGLEVEL
           value: "INFO"
+        - name: POLYGON_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: stock
+              key: polygon-token
+        - name: NEWSAPI_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: stock
+              key: newsapi-token
         - name: DISCORD_TOKEN
           valueFrom:
             secretKeyRef:
