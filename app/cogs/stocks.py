@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 from datetime import datetime
@@ -90,7 +89,7 @@ class StockQuote(commands.Cog):
     async def getLatestMarketWatch(self):
         async with aiohttp.ClientSession() as session:
             async with session.get(
-                f"https://www.marketwatch.com/latest-news?mod=top_nav"
+                "https://www.marketwatch.com/latest-news?mod=top_nav"
             ) as r:
                 if r.status == 200:
                     return self.parseMarketWatch(await r.text())
