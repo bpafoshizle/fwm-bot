@@ -6,7 +6,7 @@ from datetime import datetime
 import aiohttp
 import discord
 from bs4 import BeautifulSoup
-from cogs.utils.timing import calc_tomorrow_4pm, calc_tomorrow_7am, wait_until
+from cogs.utils.timing import calc_tomorrow_7am, wait_until
 from discord.ext import commands, tasks
 
 polygon_token = os.getenv("POLYGON_TOKEN")
@@ -24,9 +24,7 @@ class StockQuote(commands.Cog):
             "ETC-USD",
         ]
         # pylint: disable=no-member
-        # self.morning_stocks_task.start()
-        # pylint: disable=no-member
-        # self.afternoon_stocks_task.start()
+        self.stock_morning_report_task.start()
 
     @commands.command()
     async def stockquote(self, ctx, symbol):
@@ -117,9 +115,7 @@ class StockQuote(commands.Cog):
                 datetime.now(),
             )
             article["source"] = getattr(
-                section.find("span", class_="article__author"),
-                "string",
-                "by Unknown",
+                section.find("span", class_="article__author"), "string", "by Unknown",
             )
             if "no-image" not in section["class"]:
                 article["title"] = section.find(
