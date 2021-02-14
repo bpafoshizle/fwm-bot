@@ -65,7 +65,9 @@ class WordOfTheDay(commands.Cog):
         self, word, word_syllables, part_of_speech, definitions
     ):
         embed = discord.Embed(
-            title="Word of the Day Post", description="The word du jour", color=0x9D2235
+            title="Word of the Day Post",
+            description="Step up your vocab",
+            color=0x9D2235,
         )
         embed.add_field(name="Today's Word", value=word, inline=False)
         embed.add_field(name="Part of Speech", value=part_of_speech)
