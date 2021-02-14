@@ -51,6 +51,34 @@ class StockQuote(commands.Cog):
             logging.debug(article)
             await ctx.send(embed=article)
 
+    @commands.command()
+    async def marketnews(self, ctx):
+        stock_news = self.formatStockNewsEmbed(await self.getLatestMarketWatch())
+        for article in stock_news:
+            logging.debug(article)
+            await ctx.send(embed=article)
+
+    @tasks.loop(hours=24)
+    async def stock_morning_report_task(self):
+        logging.info("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
+        chnl = self.bot.get_channel(int(os.getenv("DSCRD_CHNL_MONEY")))
+        logging.info("Got channel %s", chnl)
+        stock_news = self.formatStockNewsEmbed(await self.getLatestMarketWatch())
+        for article in stock_news:
+            logging.debug(article)
+            await chnl.send(embed=article)
+
+    @stock_morning_report_task.before_loop
+    async def before(self):
+        await self.bot.wait_until_ready()
+        logging.info("stock_morning_report_task.before_loop: bot ready")
+        tmrw_7am = calc_tomorrow_7am()
+        logging.info(
+            "stock_morning_report_task.before_loop: waiting until: %s", tmrw_7am
+        )
+        await wait_until(tmrw_7am)
+        logging.info("stock_morning_report_task.before_loop: waited until 7am")
+
     async def getStockNewsPolygon(self, symbol):
         async with aiohttp.ClientSession() as session:
             async with session.get(
@@ -61,47 +89,56 @@ class StockQuote(commands.Cog):
                     logging.debug(news)
                     return news
 
+    async def getLatestMarketWatch(self):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"https://www.marketwatch.com/latest-news?mod=top_nav"
+            ) as r:
+                if r.status == 200:
+                    return self.parseMarketWatch(await r.text())
+
     async def getStockNewsMarketWatch(self, symbol):
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"https://www.marketwatch.com/investing/stock/{symbol}?mod=quote_search"
             ) as r:
                 if r.status == 200:
-                    soup = BeautifulSoup(await r.text(), features="html.parser")
-                    soup = soup.find_all("div", attrs={"class": "element--article"})[:5]
-                    news = []
-                    for section in soup:
-                        article = {}
-                        article["timestamp"] = getattr(
-                            section.find("span", class_="article__timestamp"),
-                            "string",
-                            datetime.now(),
-                        )
-                        article["source"] = getattr(
-                            section.find("span", class_="article__author"),
-                            "string",
-                            "by Unknown",
-                        )
-                        if "no-image" not in section["class"]:
-                            article["title"] = section.find(
-                                "h3", class_="article__headline"
-                            ).a.string.strip()
-                            article["image"] = (
-                                section.find("a", class_="figure__image")
-                                .img["data-srcset"]
-                                .split(",")[2]
-                                .split()[0]
-                            )
-                            article["url"] = section.find("a", class_="figure__image")[
-                                "href"
-                            ]
-                        else:
-                            article["title"] = section.find(
-                                "h3", class_="article__headline"
-                            ).span.string.strip()
-                        news.append(article)
+                    return self.parseMarketWatch(await r.text())
 
-                    return news
+    def parseMarketWatch(self, responseText):
+        soup = BeautifulSoup(responseText, features="html.parser")
+        soup = soup.find_all("div", attrs={"class": "element--article"})[:5]
+        news = []
+        for section in soup:
+            article = {}
+            article["timestamp"] = getattr(
+                section.find("span", class_="article__timestamp"),
+                "string",
+                datetime.now(),
+            )
+            article["source"] = getattr(
+                section.find("span", class_="article__author"),
+                "string",
+                "by Unknown",
+            )
+            if "no-image" not in section["class"]:
+                article["title"] = section.find(
+                    "h3", class_="article__headline"
+                ).a.string.strip()
+                article["image"] = (
+                    section.find("a", class_="figure__image")
+                    .img["data-srcset"]
+                    .split(",")[2]
+                    .split()[0]
+                )
+                article["url"] = section.find("a", class_="figure__image")["href"]
+            else:
+                article["title"] = section.find(
+                    "h3", class_="article__headline"
+                ).span.string.strip()
+            news.append(article)
+
+        return news
 
     async def getPrevClose(self, symbol):
         async with aiohttp.ClientSession() as session:
@@ -169,5 +206,8 @@ class StockQuote(commands.Cog):
             )
             embed.set_image(url=article.get("image", ""))
             embed.add_field(name="Source", value=article["source"])
+            embed.add_field(
+                name="Timestamp", value=article.get("timestamp", datetime.now())
+            )
             embeds.append(embed)
         return embeds
