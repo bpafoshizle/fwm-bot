@@ -104,7 +104,8 @@ class StockQuote(commands.Cog):
 
     def parseMarketWatch(self, responseText):
         soup = BeautifulSoup(responseText, features="html.parser")
-        soup = soup.find_all("div", attrs={"class": "element--article"})[:5]
+        soup = soup.find("div", attrs={"class": ['collection__elements','j-scrollElement']})
+        soup = soup.find_all("div", attrs={"class": ["element--article"]})[:5]
         news = []
         for section in soup:
             article = {}
@@ -128,11 +129,13 @@ class StockQuote(commands.Cog):
                 )
                 article["url"] = section.find("a", class_="figure__image")["href"]
             else:
-                article["title"] = section.find(
-                    "h3", class_="article__headline"
-                ).span.string.strip()
+                try:
+                    article["title"] = section.find(
+                        "h3", class_="article__headline"
+                    ).span.string.strip()
+                except AttributeError:
+                    logging.info("No article__headline in no-image class element. Section: %s", section)
             news.append(article)
-
         return news
 
     async def getPrevClose(self, symbol):
