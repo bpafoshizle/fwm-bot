@@ -2,6 +2,7 @@ import logging
 import os
 
 from cogs.inspire import InspireQuote
+from cogs.seekingalphanews import SeekingAlhpaNews
 from cogs.stocks import StockQuote
 from cogs.wotd import WordOfTheDay
 from discord.ext import commands
@@ -25,6 +26,7 @@ async def hello(ctx):
 bot.add_cog(WordOfTheDay(bot))
 bot.add_cog(InspireQuote(bot))
 bot.add_cog(StockQuote(bot))
+bot.add_cog(SeekingAlhpaNews(bot))
 
 logging.info("running bot: %s", bot)
 bot.run(os.getenv("DISCORD_TOKEN"))
