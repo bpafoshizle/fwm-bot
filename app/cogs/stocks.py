@@ -118,9 +118,7 @@ class StockQuote(commands.Cog):
                 datetime.now(),
             )
             article["source"] = getattr(
-                section.find("span", class_="article__author"),
-                "string",
-                "by Unknown",
+                section.find("span", class_="article__author"), "string", "by Unknown"
             )
             if "no-image" not in section["class"]:
                 article["title"] = section.find(

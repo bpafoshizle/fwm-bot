@@ -71,33 +71,7 @@ class SeekingAlhpaNews(commands.Cog):
         for section in soup:
             article = {}
             article["timestamp"] = getattr(
-                section.find("span", class_="item-date"),
-                "string",
-                datetime.now(),
-            )
-            article["source"] = "Seeking Alpha"
-            article["title"] = section.find("div", class_="title").a.string
-            article[
-                "image"
-            ] = "https://seekingalpha.com/samw/static/images/OrganizationLogo.7f745bcc.png"
-            article["url"] = (
-                "https://seekingalpha.com/"
-                + section.find("div", class_="title").a["href"]
-            )
-            news.append(article)
-        return news
-
-    def parseStockNews(self, responseText):
-        soup = BeautifulSoup(responseText, features="html.parser")
-        soup = soup.select("section[data-test-id='card-container-analysis']")[:5]
-        soup = soup.find("section", attrs={"data-test-id": ["card-container-analysis"]})
-        news = []
-        for section in soup:
-            article = {}
-            article["timestamp"] = getattr(
-                section.find("span", class_="item-date"),
-                "string",
-                datetime.now(),
+                section.find("span", class_="item-date"), "string", datetime.now()
             )
             article["source"] = "Seeking Alpha"
             article["title"] = section.find("div", class_="title").a.string
