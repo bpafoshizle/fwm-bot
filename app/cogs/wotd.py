@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 from cogs.utils.timing import calc_tomorrow_6am, wait_until
 from discord.ext import commands, tasks
 
+logger = logging.getLogger(__name__)
+
 
 class WordOfTheDay(commands.Cog):
     def __init__(self, bot):
@@ -22,9 +24,9 @@ class WordOfTheDay(commands.Cog):
 
     @tasks.loop(hours=24)
     async def wotd_task(self):
-        logging.info("channel id %s", os.getenv("DSCRD_CHNL_GENERAL"))
+        logger.info("channel id %s", os.getenv("DSCRD_CHNL_GENERAL"))
         chnl = self.bot.get_channel(int(os.getenv("DSCRD_CHNL_GENERAL")))
-        logging.info("Got channel %s", chnl)
+        logger.info("Got channel %s", chnl)
         await chnl.send(
             embed=self.format_wod_response_embed(*await self.get_word_of_the_day())
         )
@@ -32,11 +34,11 @@ class WordOfTheDay(commands.Cog):
     @wotd_task.before_loop
     async def before(self):
         await self.bot.wait_until_ready()
-        logging.info("wotd_task_before_loop: bot ready")
+        logger.info("wotd_task_before_loop: bot ready")
         tmrw_6am = calc_tomorrow_6am()
-        logging.info("wotd_task_before_loop: waiting until: %s", tmrw_6am)
+        logger.info("wotd_task_before_loop: waiting until: %s", tmrw_6am)
         await wait_until(tmrw_6am)
-        logging.info("wotd_task_before_loop: waited until 6am")
+        logger.info("wotd_task_before_loop: waited until 6am")
 
     async def get_word_of_the_day(self):
         async with aiohttp.ClientSession() as session:
@@ -45,7 +47,7 @@ class WordOfTheDay(commands.Cog):
             ) as r:
                 if r.status == 200:
                     soup = BeautifulSoup(await r.text(), features="html.parser")
-                    logging.debug(
+                    logger.debug(
                         "received response from https://www.merriam-webster.com/word-of-the-day"
                     )
                     word = soup.find("div", class_="word-and-pronunciation").h1.string

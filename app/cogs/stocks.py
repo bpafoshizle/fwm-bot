@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from cogs.utils.timing import calc_tomorrow_7am, wait_until
 from discord.ext import commands, tasks
 
+logger = logging.getLogger(__name__)
 polygon_token = os.getenv("POLYGON_TOKEN")
 
 
@@ -45,36 +46,36 @@ class StockQuote(commands.Cog):
             await self.getStockNewsMarketWatch(symbol)
         )
         for article in stock_news:
-            logging.debug(article)
+            logger.debug(article)
             await ctx.send(embed=article)
 
     @commands.command()
     async def marketnews(self, ctx):
         stock_news = self.formatStockNewsEmbed(await self.getLatestMarketWatch())
         for article in stock_news:
-            logging.debug(article)
+            logger.debug(article)
             await ctx.send(embed=article)
 
     @tasks.loop(hours=24)
     async def stock_morning_report_task(self):
-        logging.info("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
+        logger.info("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
         chnl = self.bot.get_channel(int(os.getenv("DSCRD_CHNL_MONEY")))
-        logging.info("Got channel %s", chnl)
+        logger.info("Got channel %s", chnl)
         stock_news = self.formatStockNewsEmbed(await self.getLatestMarketWatch())
         for article in stock_news:
-            logging.debug(article)
+            logger.debug(article)
             await chnl.send(embed=article)
 
     @stock_morning_report_task.before_loop
     async def before(self):
         await self.bot.wait_until_ready()
-        logging.info("stock_morning_report_task.before_loop: bot ready")
+        logger.info("stock_morning_report_task.before_loop: bot ready")
         tmrw_7am = calc_tomorrow_7am()
-        logging.info(
+        logger.info(
             "stock_morning_report_task.before_loop: waiting until: %s", tmrw_7am
         )
         await wait_until(tmrw_7am)
-        logging.info("stock_morning_report_task.before_loop: waited until 7am")
+        logger.info("stock_morning_report_task.before_loop: waited until 7am")
 
     async def getStockNewsPolygon(self, symbol):
         async with aiohttp.ClientSession() as session:
@@ -83,7 +84,7 @@ class StockQuote(commands.Cog):
             ) as r:
                 if r.status == 200:
                     news = await r.json()
-                    logging.debug(news)
+                    logger.debug(news)
                     return news
 
     async def getLatestMarketWatch(self):
@@ -104,7 +105,10 @@ class StockQuote(commands.Cog):
 
     def parseMarketWatch(self, responseText):
         soup = BeautifulSoup(responseText, features="html.parser")
-        soup = soup.find_all("div", attrs={"class": "element--article"})[:5]
+        soup = soup.find(
+            "div", attrs={"class": ["collection__elements", "j-scrollElement"]}
+        )
+        soup = soup.find_all("div", attrs={"class": ["element--article"]})[:5]
         news = []
         for section in soup:
             article = {}
@@ -114,7 +118,7 @@ class StockQuote(commands.Cog):
                 datetime.now(),
             )
             article["source"] = getattr(
-                section.find("span", class_="article__author"), "string", "by Unknown",
+                section.find("span", class_="article__author"), "string", "by Unknown"
             )
             if "no-image" not in section["class"]:
                 article["title"] = section.find(
@@ -128,11 +132,16 @@ class StockQuote(commands.Cog):
                 )
                 article["url"] = section.find("a", class_="figure__image")["href"]
             else:
-                article["title"] = section.find(
-                    "h3", class_="article__headline"
-                ).span.string.strip()
+                try:
+                    article["title"] = section.find(
+                        "h3", class_="article__headline"
+                    ).span.string.strip()
+                except AttributeError:
+                    logger.info(
+                        "No article__headline in no-image class element. Section: %s",
+                        section,
+                    )
             news.append(article)
-
         return news
 
     async def getPrevClose(self, symbol):
@@ -142,7 +151,7 @@ class StockQuote(commands.Cog):
             ) as r:
                 if r.status == 200:
                     json_data = await r.json()
-                    logging.debug(json_data)
+                    logger.debug(json_data)
                     prev_close = json_data["results"][0]["c"]
                     prev_high = json_data["results"][0]["h"]
                     prev_low = json_data["results"][0]["l"]
@@ -154,7 +163,7 @@ class StockQuote(commands.Cog):
                 f"https://finance.yahoo.com/quote/{symbol}?p={symbol}"
             ) as r:
                 if r.status == 200:
-                    logging.debug(
+                    logger.debug(
                         f"received response from https://finance.yahoo.com/quote/{symbol}?p={symbol}"
                     )
                     soup = BeautifulSoup(await r.text(), features="html.parser")
