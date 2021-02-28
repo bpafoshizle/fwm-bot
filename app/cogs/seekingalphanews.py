@@ -31,9 +31,9 @@ class SeekingAlhpaNews(commands.Cog):
 
     @tasks.loop(hours=24)
     async def morning_report_task(self):
-        logger.info("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
+        logger.debug("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
         chnl = self.bot.get_channel(int(os.getenv("DSCRD_CHNL_MONEY")))
-        logger.info("Got channel %s", chnl)
+        logger.debug("Got channel %s", chnl)
         stock_news = self.formatSeekingAlphaNewsEmbed(await self.getMarketNews())
         for article in stock_news:
             logger.debug(article)
@@ -44,9 +44,7 @@ class SeekingAlhpaNews(commands.Cog):
         await self.bot.wait_until_ready()
         logger.info("seeking_alpha_morning_report_task.before_loop: bot ready")
         tmrw_7am = calc_tomorrow_7am()
-        logger.info(
-            "seeking_alpha_morning_report_task.before_loop: waiting until: %s", tmrw_7am
-        )
+        logger.info("seeking_alpha_morning_report_task.before_loop: waiting until: %s", tmrw_7am)
         await wait_until(tmrw_7am)
         logger.info("seeking_alpha_morning_report_task.before_loop: waited until 7am")
 
@@ -58,9 +56,7 @@ class SeekingAlhpaNews(commands.Cog):
 
     async def getStockNews(self, symbol):
         async with aiohttp.ClientSession() as session:
-            async with session.get(
-                f"https://seekingalpha.com/symbol/{symbol}/news"
-            ) as r:
+            async with session.get(f"https://seekingalpha.com/symbol/{symbol}/news") as r:
                 if r.status == 200:
                     return self.parseMarketWatch(await r.text())
 
@@ -79,8 +75,7 @@ class SeekingAlhpaNews(commands.Cog):
                 "image"
             ] = "https://seekingalpha.com/samw/static/images/OrganizationLogo.7f745bcc.png"
             article["url"] = (
-                "https://seekingalpha.com/"
-                + section.find("div", class_="title").a["href"]
+                "https://seekingalpha.com/" + section.find("div", class_="title").a["href"]
             )
             news.append(article)
         return news
@@ -93,8 +88,6 @@ class SeekingAlhpaNews(commands.Cog):
             )
             embed.set_image(url=article.get("image", ""))
             embed.add_field(name="Source", value=article["source"])
-            embed.add_field(
-                name="Timestamp", value=article.get("timestamp", datetime.now())
-            )
+            embed.add_field(name="Timestamp", value=article.get("timestamp", datetime.now()))
             embeds.append(embed)
         return embeds
