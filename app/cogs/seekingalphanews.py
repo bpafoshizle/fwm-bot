@@ -23,9 +23,7 @@ class SeekingAlhpaNews(commands.Cog):
             # sa_news = self.formatSeekingAlphaNewsEmbed(await self.getStockNews(symbol))
             pass
         else:
-            sa_news = self.formatSeekingAlphaNewsEmbed(
-                await self.getMarketNews()
-            )
+            sa_news = self.formatSeekingAlphaNewsEmbed(await self.getMarketNews())
 
         for article in sa_news:
             logger.debug(article)
@@ -36,9 +34,7 @@ class SeekingAlhpaNews(commands.Cog):
         logger.debug("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
         chnl = self.bot.get_channel(int(os.getenv("DSCRD_CHNL_MONEY")))
         logger.debug("Got channel %s", chnl)
-        stock_news = self.formatSeekingAlphaNewsEmbed(
-            await self.getMarketNews()
-        )
+        stock_news = self.formatSeekingAlphaNewsEmbed(await self.getMarketNews())
         for article in stock_news:
             logger.debug(article)
             await chnl.send(embed=article)
@@ -53,15 +49,11 @@ class SeekingAlhpaNews(commands.Cog):
             tmrw_7am,
         )
         await wait_until(tmrw_7am)
-        logger.info(
-            "seeking_alpha_morning_report_task.before_loop: waited until 7am"
-        )
+        logger.info("seeking_alpha_morning_report_task.before_loop: waited until 7am")
 
     async def getMarketNews(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(
-                "https://seekingalpha.com/market-news/all"
-            ) as r:
+            async with session.get("https://seekingalpha.com/market-news/all") as r:
                 if r.status == 200:
                     return self.parseMarketNews(await r.text())
 
