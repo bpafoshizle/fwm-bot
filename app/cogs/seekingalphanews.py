@@ -80,7 +80,7 @@ class SeekingAlhpaNews(commands.Cog):
                 "image"
             ] = "https://seekingalpha.com/samw/static/images/OrganizationLogo.7f745bcc.png"
             article["url"] = (
-                "https://seekingalpha.com/" 
+                "https://seekingalpha.com/"
                 + section.find("div", class_="title").a["href"]
             )
             news.append(article)
