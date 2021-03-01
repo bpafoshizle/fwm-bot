@@ -59,7 +59,9 @@ class SeekingAlhpaNews(commands.Cog):
 
     async def getStockNews(self, symbol):
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"https://seekingalpha.com/symbol/{symbol}/news") as r:
+            async with session.get(
+                f"https://seekingalpha.com/symbol/{symbol}/news"
+            ) as r:
                 if r.status == 200:
                     return self.parseMarketWatch(await r.text())
 
@@ -78,7 +80,8 @@ class SeekingAlhpaNews(commands.Cog):
                 "image"
             ] = "https://seekingalpha.com/samw/static/images/OrganizationLogo.7f745bcc.png"
             article["url"] = (
-                "https://seekingalpha.com/" + section.find("div", class_="title").a["href"]
+                "https://seekingalpha.com/" 
+                + section.find("div", class_="title").a["href"]
             )
             news.append(article)
         return news
@@ -87,12 +90,12 @@ class SeekingAlhpaNews(commands.Cog):
         embeds = []
         for article in news:
             embed = discord.Embed(
-                title=article["title"],
-                url=article.get("url", ""),
-                color=0x9D2235,
+                title=article["title"], url=article.get("url", ""), color=0x9D2235,
             )
             embed.set_image(url=article.get("image", ""))
             embed.add_field(name="Source", value=article["source"])
-            embed.add_field(name="Timestamp", value=article.get("timestamp", datetime.now()))
+            embed.add_field(
+                name="Timestamp", value=article.get("timestamp", datetime.now())
+            )
             embeds.append(embed)
         return embeds
