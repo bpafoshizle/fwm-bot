@@ -76,5 +76,25 @@ spec:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-bot-feature-requests
+        - name: TWITCH_BOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: twitch
+              key: twitch-bot-username
+        - name: TWITCH_BOT_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: twitch
+              key: twitch-bot-client-id
+        - name: TWITCH_BOT_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: twitch
+              key: twitch-bot-client-secret
+        - name: TWITCH_CHAT_OAUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: twitch
+              key: twitch-chat-oauth-token
       imagePullSecrets:
       - name: ghcr-egroup-bot
