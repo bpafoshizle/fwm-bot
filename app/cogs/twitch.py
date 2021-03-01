@@ -1,11 +1,10 @@
-import os
 import logging
-from aiohttp.helpers import HeadersMixin
+import os
+from datetime import datetime
 
 import discord
 import twitchio as twio
-from cogs.utils.timing import naive_to_us_central, fmt_datetime_to_minute
-from datetime import datetime
+from cogs.utils.timing import fmt_datetime_to_minute, naive_to_us_central
 from discord.ext import commands, tasks
 from twitchio.ext import commands as twitch_commands
 
@@ -39,6 +38,7 @@ class Twitch(commands.Cog):
         )
 
         self.discord_bot.loop.create_task(self.bot.start())
+        # pylint: disable=no-member
         self.check_channels_live_task.start()
 
         self.bot.listen("event_ready")(self.event_ready)
@@ -58,10 +58,10 @@ class Twitch(commands.Cog):
     async def event_ready(self):
         logger.info("Logged into Twitch %s", self.bot.nick)
 
-    async def event_userstate(user):
+    async def event_userstate(self, user):
         logger.info("event_userstate: %s", user)
 
-    async def event_webhook(data):
+    async def event_webhook(self, data):
         logger.info("event_webhook: %s", data)
 
     # Discord tasks and commands
@@ -77,8 +77,13 @@ class Twitch(commands.Cog):
             userdata_started_at = datetime.strptime(
                 liveuserdata["started_at"], "%Y-%m-%dT%H:%M:%SZ"
             )
-            if self.channel_states[userdata_user_name]["started_at"] < userdata_started_at:
-                self.channel_states[userdata_user_name]["started_at"] = userdata_started_at
+            if (
+                self.channel_states[userdata_user_name]["started_at"]
+                < userdata_started_at
+            ):
+                self.channel_states[userdata_user_name][
+                    "started_at"
+                ] = userdata_started_at
                 await chnl.send(embed=self.formatUserLiveEmbed(liveuserdata))
 
     @check_channels_live_task.before_loop
@@ -106,7 +111,9 @@ class Twitch(commands.Cog):
     async def twitch_getfollowers(self, ctx, username):
         userid, image_url = await self.info_from_name(username)
         response = await self.client.get_followers(int(userid))
-        embed = self.formatFollowerInfoEmbed(username, image_url, self.parseFollowers(response))
+        embed = self.formatFollowerInfoEmbed(
+            username, image_url, self.parseFollowers(response)
+        )
         logger.debug(response)
         await ctx.send(embed=embed)
 
@@ -117,14 +124,18 @@ class Twitch(commands.Cog):
             "Discord gaming channel: %s",
             self.discord_bot.get_channel(int(os.getenv("DSCRD_CHNL_GAMING"))),
         )
-        self.discord_gaming_chnl = self.discord_bot.get_channel(int(os.getenv("DSCRD_CHNL_GAMING")))
+        discord_gaming_chnl = self.discord_bot.get_channel(
+            int(os.getenv("DSCRD_CHNL_GAMING"))
+        )
         await ctx.send("Hai there!")
-        await self.discord_gaming_chnl.send("oh hai there, discord")
+        await discord_gaming_chnl.send("oh hai there, discord")
 
     def init_channel_state(self, followed_channels):
         channel_states = {}
         for channel in followed_channels:
-            channel_states[channel] = {"started_at": datetime.strptime("1970-01-01", "%Y-%m-%d")}
+            channel_states[channel] = {
+                "started_at": datetime.strptime("1970-01-01", "%Y-%m-%d")
+            }
         return channel_states
 
     def formatUserLiveEmbed(self, liveuserdata):
@@ -142,7 +153,9 @@ class Twitch(commands.Cog):
                 ),
             ),
         )
-        embed.set_image(url=liveuserdata["thumbnail_url"].format(width="1920", height="1080"))
+        embed.set_image(
+            url=liveuserdata["thumbnail_url"].format(width="1920", height="1080")
+        )
         return embed
 
     def formatUserInfoEmbed(self, userdata):

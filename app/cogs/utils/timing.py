@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime, timedelta, timezone, tzinfo
+from datetime import datetime, timedelta, timezone
 
 import pytz
 
