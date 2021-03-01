@@ -121,26 +121,32 @@ class StockQuote(commands.Cog):
                 section.find("span", class_="article__author"), "string", "by Unknown"
             )
             if "no-image" not in section["class"]:
-                article["title"] = section.find(
-                    "h3", class_="article__headline"
-                ).a.string.strip()
                 article["image"] = (
                     section.find("a", class_="figure__image")
                     .img["data-srcset"]
                     .split(",")[2]
                     .split()[0]
                 )
-                article["url"] = section.find("a", class_="figure__image")["href"]
-            else:
+                # article["url"] = section.find("a", class_="figure__image")["href"]
+            try:
+                article["title"] = section.find(
+                    "h3", class_="article__headline"
+                ).a.string.strip()
+                article["url"] = section.find("h3", class_="article__headline").a[
+                    "href"
+                ]
+            except AttributeError:
                 try:
                     article["title"] = section.find(
                         "h3", class_="article__headline"
                     ).span.string.strip()
                 except AttributeError:
+                    article["title"] = "No title found"
                     logger.info(
                         "No article__headline in no-image class element. Section: %s",
                         section,
                     )
+
             news.append(article)
         return news
 

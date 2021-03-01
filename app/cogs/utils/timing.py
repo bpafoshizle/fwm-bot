@@ -32,3 +32,12 @@ def calc_tomorrow_7am():
 
 def calc_tomorrow_4pm():
     return calc_tomorrow_at_time(16, 0)
+
+
+def naive_to_us_central(naive_datetime):
+    utc_datetime = naive_datetime.replace(tzinfo=timezone.utc)
+    return utc_datetime.astimezone(us_central_tz)
+
+
+def fmt_datetime_to_minute(dtm):
+    return dtm.strftime("%Y-%m-%d at %I:%M %p")

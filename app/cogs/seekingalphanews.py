@@ -31,9 +31,9 @@ class SeekingAlhpaNews(commands.Cog):
 
     @tasks.loop(hours=24)
     async def morning_report_task(self):
-        logger.info("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
+        logger.debug("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
         chnl = self.bot.get_channel(int(os.getenv("DSCRD_CHNL_MONEY")))
-        logger.info("Got channel %s", chnl)
+        logger.debug("Got channel %s", chnl)
         stock_news = self.formatSeekingAlphaNewsEmbed(await self.getMarketNews())
         for article in stock_news:
             logger.debug(article)
@@ -45,7 +45,8 @@ class SeekingAlhpaNews(commands.Cog):
         logger.info("seeking_alpha_morning_report_task.before_loop: bot ready")
         tmrw_7am = calc_tomorrow_7am()
         logger.info(
-            "seeking_alpha_morning_report_task.before_loop: waiting until: %s", tmrw_7am
+            "seeking_alpha_morning_report_task.before_loop: waiting until: %s",
+            tmrw_7am,
         )
         await wait_until(tmrw_7am)
         logger.info("seeking_alpha_morning_report_task.before_loop: waited until 7am")
@@ -71,7 +72,7 @@ class SeekingAlhpaNews(commands.Cog):
         for section in soup:
             article = {}
             article["timestamp"] = getattr(
-                section.find("span", class_="item-date"), "string", datetime.now()
+                section.find("span", class_="item-date"), "string", datetime.now(),
             )
             article["source"] = "Seeking Alpha"
             article["title"] = section.find("div", class_="title").a.string
@@ -89,7 +90,7 @@ class SeekingAlhpaNews(commands.Cog):
         embeds = []
         for article in news:
             embed = discord.Embed(
-                title=article["title"], url=article.get("url", ""), color=0x9D2235
+                title=article["title"], url=article.get("url", ""), color=0x9D2235,
             )
             embed.set_image(url=article.get("image", ""))
             embed.add_field(name="Source", value=article["source"])
