@@ -23,7 +23,9 @@ class SeekingAlhpaNews(commands.Cog):
             # sa_news = self.formatSeekingAlphaNewsEmbed(await self.getStockNews(symbol))
             pass
         else:
-            sa_news = self.formatSeekingAlphaNewsEmbed(await self.getMarketNews())
+            sa_news = self.formatSeekingAlphaNewsEmbed(
+                await self.getMarketNews()
+            )
 
         for article in sa_news:
             logger.debug(article)
@@ -34,7 +36,9 @@ class SeekingAlhpaNews(commands.Cog):
         logger.debug("channel id %s", os.getenv("DSCRD_CHNL_MONEY"))
         chnl = self.bot.get_channel(int(os.getenv("DSCRD_CHNL_MONEY")))
         logger.debug("Got channel %s", chnl)
-        stock_news = self.formatSeekingAlphaNewsEmbed(await self.getMarketNews())
+        stock_news = self.formatSeekingAlphaNewsEmbed(
+            await self.getMarketNews()
+        )
         for article in stock_news:
             logger.debug(article)
             await chnl.send(embed=article)
@@ -44,19 +48,28 @@ class SeekingAlhpaNews(commands.Cog):
         await self.bot.wait_until_ready()
         logger.info("seeking_alpha_morning_report_task.before_loop: bot ready")
         tmrw_7am = calc_tomorrow_7am()
-        logger.info("seeking_alpha_morning_report_task.before_loop: waiting until: %s", tmrw_7am)
+        logger.info(
+            "seeking_alpha_morning_report_task.before_loop: waiting until: %s",
+            tmrw_7am,
+        )
         await wait_until(tmrw_7am)
-        logger.info("seeking_alpha_morning_report_task.before_loop: waited until 7am")
+        logger.info(
+            "seeking_alpha_morning_report_task.before_loop: waited until 7am"
+        )
 
     async def getMarketNews(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get("https://seekingalpha.com/market-news/all") as r:
+            async with session.get(
+                "https://seekingalpha.com/market-news/all"
+            ) as r:
                 if r.status == 200:
                     return self.parseMarketNews(await r.text())
 
     async def getStockNews(self, symbol):
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"https://seekingalpha.com/symbol/{symbol}/news") as r:
+            async with session.get(
+                f"https://seekingalpha.com/symbol/{symbol}/news"
+            ) as r:
                 if r.status == 200:
                     return self.parseMarketWatch(await r.text())
 
@@ -67,7 +80,9 @@ class SeekingAlhpaNews(commands.Cog):
         for section in soup:
             article = {}
             article["timestamp"] = getattr(
-                section.find("span", class_="item-date"), "string", datetime.now()
+                section.find("span", class_="item-date"),
+                "string",
+                datetime.now(),
             )
             article["source"] = "Seeking Alpha"
             article["title"] = section.find("div", class_="title").a.string
@@ -75,7 +90,8 @@ class SeekingAlhpaNews(commands.Cog):
                 "image"
             ] = "https://seekingalpha.com/samw/static/images/OrganizationLogo.7f745bcc.png"
             article["url"] = (
-                "https://seekingalpha.com/" + section.find("div", class_="title").a["href"]
+                "https://seekingalpha.com/"
+                + section.find("div", class_="title").a["href"]
             )
             news.append(article)
         return news
@@ -84,10 +100,14 @@ class SeekingAlhpaNews(commands.Cog):
         embeds = []
         for article in news:
             embed = discord.Embed(
-                title=article["title"], url=article.get("url", ""), color=0x9D2235
+                title=article["title"],
+                url=article.get("url", ""),
+                color=0x9D2235,
             )
             embed.set_image(url=article.get("image", ""))
             embed.add_field(name="Source", value=article["source"])
-            embed.add_field(name="Timestamp", value=article.get("timestamp", datetime.now()))
+            embed.add_field(
+                name="Timestamp", value=article.get("timestamp", datetime.now())
+            )
             embeds.append(embed)
         return embeds
