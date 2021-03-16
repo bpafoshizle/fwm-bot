@@ -42,6 +42,7 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHON_BLACK_CONFIG_FILE: ../app/pyproject.toml
   
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
