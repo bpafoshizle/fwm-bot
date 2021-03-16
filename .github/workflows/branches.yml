@@ -34,9 +34,10 @@ jobs:
       - name: Run Super-Linter
         uses: github/super-linter@v3
         env:
+          LINTER_RULES_PATH: /app
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYTHON_BLACK_CONFIG_FILE: app/pyproject.toml
+          PYTHON_BLACK_CONFIG_FILE: pyproject.toml
   
   build-docker:
     # Ensure test job passes before pushing image.
