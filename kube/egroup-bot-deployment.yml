@@ -96,5 +96,35 @@ spec:
             secretKeyRef:
               name: twitch
               key: twitch-chat-oauth-token
+        - name: REDDIT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: reddit
+              key: reddit-username
+        - name: REDDIT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: reddit
+              key: reddit-password
+        - name: REDDIT_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: reddit
+              key: reddit-client-id
+        - name: REDDIT_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: reddit
+              key: reddit-client-secret
+        - name: GFYCAT_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: gfycat
+              key: gfycat-client-id
+        - name: GFYCAT_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: gfycat
+              key: gfycat-client-secret
       imagePullSecrets:
       - name: ghcr-egroup-bot
