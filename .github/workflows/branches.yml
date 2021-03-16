@@ -36,7 +36,7 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYTHON_BLACK_CONFIG_FILE: ../app/pyproject.toml
+          PYTHON_BLACK_CONFIG_FILE: app/pyproject.toml
   
   build-docker:
     # Ensure test job passes before pushing image.
