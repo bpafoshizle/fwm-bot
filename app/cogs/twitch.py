@@ -84,7 +84,11 @@ class Twitch(commands.Cog):
                 self.channel_states[userdata_user_name][
                     "started_at"
                 ] = userdata_started_at
-                await chnl.send(embed=self.formatUserLiveEmbed(liveuserdata))
+                profileuserdata = await self.client.get_users(liveuserdata["user_id"])
+                logger.info(profileuserdata)
+                await chnl.send(
+                    embed=self.formatUserLiveEmbed(liveuserdata, profileuserdata[0])
+                )
 
     @check_channels_live_task.before_loop
     async def before(self):
@@ -99,7 +103,11 @@ class Twitch(commands.Cog):
         response = await self.client.get_streams(channels=channels)
         logger.debug(response)
         for liveuserdata in response:
-            await ctx.send(embed=self.formatUserLiveEmbed(liveuserdata))
+            profileuserdata = await self.client.get_users(liveuserdata["user_id"])
+            logger.info("profileuserdata")
+            await ctx.send(
+                embed=self.formatUserLiveEmbed(liveuserdata, profileuserdata)
+            )
 
     @commands.command()
     async def twitch_getuser(self, ctx, user):
@@ -138,7 +146,7 @@ class Twitch(commands.Cog):
             }
         return channel_states
 
-    def formatUserLiveEmbed(self, liveuserdata):
+    def formatUserLiveEmbed(self, liveuserdata, profileuserdata):
         embed = discord.Embed(
             title=f"{liveuserdata['user_name']} is Live on Twitch!",
             description=liveuserdata["title"],
@@ -153,9 +161,7 @@ class Twitch(commands.Cog):
                 ),
             ),
         )
-        embed.set_image(
-            url=liveuserdata["thumbnail_url"].format(width="1920", height="1080")
-        )
+        embed.set_image(url=profileuserdata.profile_image)
         return embed
 
     def formatUserInfoEmbed(self, userdata):
