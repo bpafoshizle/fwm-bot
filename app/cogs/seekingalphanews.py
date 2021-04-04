@@ -72,7 +72,9 @@ class SeekingAlhpaNews(commands.Cog):
         for section in soup:
             article = {}
             article["timestamp"] = getattr(
-                section.find("span", class_="item-date"), "string", datetime.now(),
+                section.find("span", class_="item-date"),
+                "string",
+                datetime.now(),
             )
             article["source"] = "Seeking Alpha"
             article["title"] = section.find("div", class_="title").a.string
@@ -90,7 +92,9 @@ class SeekingAlhpaNews(commands.Cog):
         embeds = []
         for article in news:
             embed = discord.Embed(
-                title=article["title"], url=article.get("url", ""), color=0x9D2235,
+                title=article["title"],
+                url=article.get("url", ""),
+                color=0x9D2235,
             )
             embed.set_image(url=article.get("image", ""))
             embed.add_field(name="Source", value=article["source"])

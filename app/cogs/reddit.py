@@ -49,7 +49,8 @@ class Reddit(commands.Cog):
         logger.info("morning_hottie_task.before_loop: bot ready")
         tmrw_6am = calc_tomorrow_6am()
         logger.info(
-            "morning_hottie_task.before_loop: waiting until: %s", tmrw_6am,
+            "morning_hottie_task.before_loop: waiting until: %s",
+            tmrw_6am,
         )
         await wait_until(tmrw_6am)
         logger.info("morning_hottie_task.before_loop: waited until 7am")
