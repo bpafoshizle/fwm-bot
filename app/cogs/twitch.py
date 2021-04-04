@@ -104,9 +104,8 @@ class Twitch(commands.Cog):
         logger.debug(response)
         for liveuserdata in response:
             profileuserdata = await self.client.get_users(liveuserdata["user_id"])
-            logger.info("profileuserdata")
             await ctx.send(
-                embed=self.formatUserLiveEmbed(liveuserdata, profileuserdata)
+                embed=self.formatUserLiveEmbed(liveuserdata, profileuserdata[0])
             )
 
     @commands.command()
