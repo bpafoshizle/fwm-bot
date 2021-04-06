@@ -23,7 +23,7 @@ followed_channels = [
     "Stodeh",
     "Jukeyz",
     "Symfuhny",
-    "NICKMERCS"
+    "NICKMERCS",
 ]
 
 
