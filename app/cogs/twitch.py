@@ -10,13 +10,20 @@ from twitchio.ext import commands as twitch_commands
 
 logger = logging.getLogger(__name__)
 
-followed_channels = [
+join_channels = [
     "bpafoshizle",
     "ephenry84",
     "elzblazin",
     "kuhouseii",
+]
+
+followed_channels = [
     "JackFrags",
     "TrueGameDataLive",
+    "Stodeh",
+    "Jukeyz",
+    "Symfuhny",
+    "NICKMERCS",
 ]
 
 
@@ -34,7 +41,7 @@ class Twitch(commands.Cog):
             client_id=os.getenv("TWITCH_BOT_CLIENT_ID"),
             nick=os.getenv("TWITCH_BOT_USERNAME"),
             prefix="!",
-            initial_channels=followed_channels,
+            initial_channels=join_channels,
         )
 
         self.discord_bot.loop.create_task(self.bot.start())
@@ -89,6 +96,12 @@ class Twitch(commands.Cog):
                 await chnl.send(
                     embed=self.formatUserLiveEmbed(liveuserdata, profileuserdata[0])
                 )
+            else:
+                logger.info(
+                    "User %s still streaming since %s",
+                    userdata_user_name,
+                    self.channel_states[userdata_user_name]["started_at"],
+                )
 
     @check_channels_live_task.before_loop
     async def before(self):
@@ -104,6 +117,7 @@ class Twitch(commands.Cog):
         logger.debug(response)
         for liveuserdata in response:
             profileuserdata = await self.client.get_users(liveuserdata["user_id"])
+            logger.info(profileuserdata)
             await ctx.send(
                 embed=self.formatUserLiveEmbed(liveuserdata, profileuserdata[0])
             )
