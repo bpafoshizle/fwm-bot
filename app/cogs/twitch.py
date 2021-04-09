@@ -77,7 +77,9 @@ class Twitch(commands.Cog):
         logger.debug("channel id %s", os.getenv("DSCRD_CHNL_GAMING"))
         chnl = self.discord_bot.get_channel(int(os.getenv("DSCRD_CHNL_GAMING")))
         logger.debug("Got channel %s", chnl)
-        response = await self.client.get_streams(channels=followed_channels)
+        response = await self.client.get_streams(
+            channels=join_channels + followed_channels
+        )
         for liveuserdata in response:
             logger.debug(liveuserdata)
             userdata_user_name = liveuserdata["user_name"]
@@ -110,7 +112,7 @@ class Twitch(commands.Cog):
 
     @commands.command()
     async def twitch_checklive(self, ctx, channel=None):
-        channels = followed_channels
+        channels = join_channels + followed_channels
         if channel:
             channels = [channel]
         response = await self.client.get_streams(channels=channels)
