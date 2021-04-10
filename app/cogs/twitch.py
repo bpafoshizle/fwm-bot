@@ -29,7 +29,7 @@ followed_channels = [
 
 class Twitch(commands.Cog):
     def __init__(self, bot):
-        self.channel_states = self.init_channel_state(followed_channels)
+        self.channel_states = self.init_channel_state(join_channels + followed_channels)
         self.discord_bot = bot
         self.client = twio.Client(
             client_id=os.getenv("TWITCH_BOT_CLIENT_ID"),
