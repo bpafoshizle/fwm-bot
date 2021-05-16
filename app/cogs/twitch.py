@@ -21,7 +21,6 @@ followed_channels = [
     "JackFrags",
     "TrueGameDataLive",
     "Stodeh",
-    "Jukeyz",
     "Symfuhny",
     "NICKMERCS",
 ]

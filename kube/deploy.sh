@@ -1,3 +1,3 @@
 #!/bin/bash
 
-kubectl --kubeconfig ~/.kube/bletchley-config -n egroup-bot apply -f egroup-bot-deployment.yml
+kubectl --kubeconfig ~/.kube/bletchley-config -n fwm-bot apply -f fwm-bot-deployment.yml

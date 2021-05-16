@@ -1,12 +1,8 @@
 import logging
 import os
 
-from cogs.inspire import InspireQuote
 from cogs.reddit import Reddit
-from cogs.seekingalphanews import SeekingAlhpaNews
-from cogs.stocks import StockQuote
 from cogs.twitch import Twitch
-from cogs.wotd import WordOfTheDay
 from discord.ext import commands
 
 LOGLEVEL = os.environ.get("LOGLEVEL", "WARNING").upper()
@@ -25,10 +21,6 @@ async def hello(ctx):
     await ctx.send("Hello!")
 
 
-bot.add_cog(WordOfTheDay(bot))
-bot.add_cog(InspireQuote(bot))
-bot.add_cog(StockQuote(bot))
-bot.add_cog(SeekingAlhpaNews(bot))
 bot.add_cog(Twitch(bot))
 bot.add_cog(Reddit(bot))
 

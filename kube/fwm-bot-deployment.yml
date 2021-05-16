@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: egroup-bot
-  namespace: egroup-bot
+  name: fwm-bot
+  namespace: fwm-bot
   labels:
-    app: egroup-bot
+    app: fwm-bot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: egroup-bot
+      app: fwm-bot
   template:
     metadata:
       labels:
-        app: egroup-bot
+        app: fwm-bot
     spec:
       containers:
-      - name: egroup-bot
-        image: ghcr.io/bpafoshizle/egroup-bot:latest
+      - name: fwm-bot
+        image: ghcr.io/bpafoshizle/fwm-bot:latest
         env:
         - name: LOGLEVEL
           value: "INFO"
@@ -127,4 +127,4 @@ spec:
               name: gfycat
               key: gfycat-client-secret
       imagePullSecrets:
-      - name: ghcr-egroup-bot
+      - name: ghcr-fwm-bot
