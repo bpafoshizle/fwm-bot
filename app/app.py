@@ -1,28 +1,8 @@
 import logging
-import os
 
-from cogs.reddit import Reddit
-from cogs.twitch import Twitch
-from discord.ext import commands
+from pydiscogs import botbuilder
 
-LOGLEVEL = os.environ.get("LOGLEVEL", "WARNING").upper()
-logging.basicConfig(level=LOGLEVEL)
-
-bot = commands.Bot(command_prefix=".")
-
-
-@bot.event
-async def on_ready():
-    logging.info("Logged in as %s", bot.user)
-
-
-@bot.command()
-async def hello(ctx):
-    await ctx.send("Hello!")
-
-
-bot.add_cog(Twitch(bot))
-bot.add_cog(Reddit(bot))
+bot = botbuilder.build_bot("fwm-bot.yaml")
 
 logging.info("running bot: %s", bot)
-bot.run(os.getenv("DISCORD_TOKEN"))
+bot.run(bot.discord_token)
