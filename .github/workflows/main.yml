@@ -68,6 +68,7 @@ jobs:
 
       - name: build and push image
         run: |
+          # shellcheck disable=code
           IMAGE_ID=ghcr.io/${{ github.repository }}
 
           # Change all uppercase to lowercase
