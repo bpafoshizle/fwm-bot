@@ -1,5 +1,6 @@
-import os
 import logging
+import os
+
 from discord.ext import commands
 
 logger = logging.getLogger(__name__)
@@ -17,7 +18,7 @@ class MyClass(commands.Cog):
         dorukyumParam="https://github.com/Pycord-Development/pycord/issues/1342",
     ):
         logger.debug(f"reason for the dorukyumParam: {dorukyumParam}")
-        await ctx.respond(f"Hello from my_command_method!")
+        await ctx.respond("Hello from my_command_method!")
 
 
 if __name__ == "__main__":
