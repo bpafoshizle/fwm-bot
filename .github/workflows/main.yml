@@ -75,6 +75,7 @@ jobs:
           IMAGE_ID="$(echo $IMAGE_ID | tr '[:upper:]' '[:lower:]')"
 
           # Strip git ref prefix from version
+          # shellcheck disable=SC2001
           VERSION=$(echo "$GITHUB_REF" | sed -e 's,.*/\(.*\),\1,')
 
           # Strip "v" prefix from tag name
