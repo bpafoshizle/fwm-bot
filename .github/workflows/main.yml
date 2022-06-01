@@ -72,15 +72,13 @@ jobs:
           GITHUB_REF="${{ github.ref }}"
 
           # Change all uppercase to lowercase
-          #IMAGE_ID=$(echo $IMAGE_ID | tr 'A-Z' 'a-z')
           IMAGE_ID="$(echo $IMAGE_ID | tr '[:upper:]' '[:lower:]')"
 
           # Strip git ref prefix from version
-          VERSION=$(echo GITHUB_REF | sed -e 's,.*/\(.*\),\1,')
+          VERSION=$(echo "$GITHUB_REF" | sed -e 's,.*/\(.*\),\1,')
 
           # Strip "v" prefix from tag name
-          #[[ GITHUB_REF == "refs/tags/*" ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          [[ GITHUB_REF == "refs/tags/*" ]] && VERSION="${VERSION//^v//}"
+          [[ "$GITHUB_REF" == "refs/tags/*" ]] && VERSION="${VERSION//^v//}"
 
           # Use Docker `latest` tag convention
           [ "$VERSION" == main ] && VERSION=latest
