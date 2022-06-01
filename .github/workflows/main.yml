@@ -68,28 +68,27 @@ jobs:
 
       - name: build and push image
         run: |
-          # shellcheck disable=SC2021,SC2193,SC2001,SC2086
           IMAGE_ID=ghcr.io/${{ github.repository }}
-          GITHUB_REF = "${{ github.ref }}"
+          GITHUB_REF="${{ github.ref }}"
 
           # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr 'A-Z' 'a-z')
+          #IMAGE_ID=$(echo $IMAGE_ID | tr 'A-Z' 'a-z')
+          IMAGE_ID="$(echo $IMAGE_ID | tr '[:upper:]' '[:lower:]')"
 
           # Strip git ref prefix from version
           VERSION=$(echo GITHUB_REF | sed -e 's,.*/\(.*\),\1,')
 
           # Strip "v" prefix from tag name
-          
           #[[ GITHUB_REF == "refs/tags/*" ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           [[ GITHUB_REF == "refs/tags/*" ]] && VERSION="${VERSION//^v//}"
 
           # Use Docker `latest` tag convention
           [ "$VERSION" == main ] && VERSION=latest
 
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
+          echo IMAGE_ID="$IMAGE_ID"
+          echo VERSION="$VERSION"
 
           docker buildx build \
-          --push --tag $IMAGE_ID:$VERSION \
+          --push --tag "$IMAGE_ID:$VERSION" \
           --platform linux/amd64,linux/arm64 . \
           --file Dockerfile
