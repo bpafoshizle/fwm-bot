@@ -1,0 +1,38 @@
+discordToken: !ENV ${DISCORD_TOKEN}
+guildIds:
+  - !ENV ${DISCORD_GUILD_ID}
+commandPrefix: "."
+logLevel: !ENV ${LOGLEVEL}
+
+cogs:
+  - name: inspire
+  - name: wotd
+    properties:
+      postChannelId: !ENV ${DSCRD_CHNL_GENERAL}
+  - name: twitch
+    properties:
+      twitchClientID: !ENV ${TWITCH_BOT_CLIENT_ID}
+      twitchClientSecret: !ENV ${TWITCH_BOT_CLIENT_SECRET}
+      joinChannelList:
+        - bpafoshizle
+        - ephenry84
+        - thereallordyupa
+        - elzblazin
+        - kuhouseii
+      postChannelId: !ENV ${DSCRD_CHNL_GENERAL}
+  - name: reddit
+    properties: 
+      redditClient: !ENV ${REDDIT_CLIENT_ID}
+      redditSecret: !ENV ${REDDIT_CLIENT_SECRET}
+      redditUsername: !ENV ${REDDIT_USERNAME}
+      redditPassword: !ENV ${REDDIT_PASSWORD}
+      subRedditList: 
+        - xbox
+        - PS5
+        - pcmasterrace
+        - halo
+        - Battlefield
+        - Warzone
+      gfycatClientId: !ENV ${GFYCAT_CLIENT_ID}
+      gfycatClientSecret: !ENV ${GFYCAT_CLIENT_SECRET}
+      postChannelId: !ENV ${DSCRD_CHNL_GENERAL}

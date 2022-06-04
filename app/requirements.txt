@@ -1,6 +1,2 @@
-discord.py
-bs4
-pytz
-twitchio==1.2.1
-asyncpraw
-gfycat
+py_cord @ git+https://github.com/Pycord-Development/pycord@master
+pydiscogs @ git+https://github.com/bpafoshizle/pydiscogs@main

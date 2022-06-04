@@ -21,61 +21,16 @@ spec:
         env:
         - name: LOGLEVEL
           value: "INFO"
-        - name: POLYGON_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: stock
-              key: polygon-token
-        - name: NEWSAPI_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: stock
-              key: newsapi-token
         - name: DISCORD_TOKEN
           valueFrom:
             secretKeyRef:
               name: discord
               key: token
-        - name: DSCRD_CHNL_BOT_TESTING
-          valueFrom:
-            secretKeyRef:
-              name: discord
-              key: dscrd-chnl-bot-testing
         - name: DSCRD_CHNL_GENERAL
           valueFrom:
             secretKeyRef:
               name: discord
               key: dscrd-chnl-general
-        - name: DSCRD_CHNL_MEAL_PICS
-          valueFrom:
-            secretKeyRef:
-              name: discord
-              key: dscrd-chnl-meal-pics
-        - name: DSCRD_CHNL_SPORTS
-          valueFrom:
-            secretKeyRef:
-              name: discord
-              key: dscrd-chnl-sports
-        - name: DSCRD_CHNL_POLITICS
-          valueFrom:
-            secretKeyRef:
-              name: discord
-              key: dscrd-chnl-politics
-        - name: DSCRD_CHNL_MONEY
-          valueFrom:
-            secretKeyRef:
-              name: discord
-              key: dscrd-chnl-money
-        - name: DSCRD_CHNL_GAMING
-          valueFrom:
-            secretKeyRef:
-              name: discord
-              key: dscrd-chnl-gaming
-        - name: DSCRD_CHNL_BOT_FEATURE_REQUESTS
-          valueFrom:
-            secretKeyRef:
-              name: discord
-              key: dscrd-chnl-bot-feature-requests
         - name: TWITCH_BOT_USERNAME
           valueFrom:
             secretKeyRef:
