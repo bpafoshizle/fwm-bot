@@ -13,5 +13,6 @@ def main():
     logging.info("running bot: %s", bot)
     bot.run(bot.discord_token)
 
+
 if __name__ == "__main__":
     main()
