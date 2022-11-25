@@ -27,9 +27,8 @@ cogs:
       redditUsername: !ENV ${REDDIT_USERNAME}
       redditPassword: !ENV ${REDDIT_PASSWORD}
       subRedditList: 
-        - xbox
-        - PS5
-        - pcmasterrace
+        - gaming
+        - GamingLeaksAndRumours
         - halo
         - Battlefield
         - Warzone
