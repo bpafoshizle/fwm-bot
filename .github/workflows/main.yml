@@ -22,9 +22,9 @@ jobs:
           echo github.ref: ${{ github.ref }}
 
   call-format-and-lint:
-    uses: bpafoshizle/actions/.github/workflows/lint.yml
+    uses: bpafoshizle/actions/.github/workflows/lint.yml@main
   
   call-build-and-push:
-    uses: bpafoshizle/actions/.github/workflows/docker-build.yml
+    uses: bpafoshizle/actions/.github/workflows/docker-build.yml@main
     with:
       platform: 'linux/amd64,linux/arm64'
