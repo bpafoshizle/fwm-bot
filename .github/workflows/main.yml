@@ -25,6 +25,8 @@ jobs:
     uses: bpafoshizle/actions/.github/workflows/lint.yml@main
   
   call-build-and-push:
+    # Ensure lint job passes before building image.
+    needs: format-and-lint
     uses: bpafoshizle/actions/.github/workflows/docker-build.yml@main
     with:
       platform: 'linux/amd64,linux/arm64'
