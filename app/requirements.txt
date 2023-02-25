@@ -1,2 +1,2 @@
-py_cord @ git+https://github.com/Pycord-Development/pycord@master
+py-cord==2.3.2
 pydiscogs @ git+https://github.com/bpafoshizle/pydiscogs@main
