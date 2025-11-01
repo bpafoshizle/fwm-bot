@@ -15,7 +15,6 @@ set +o allexport
 ./create-namespace.sh
 ./create-reddit-secret.sh
 ./create-twitch-secret.sh
-
 ./create-ollama-secret.sh
 ./create-google-secret.sh
 ./create-groq-secret.sh
