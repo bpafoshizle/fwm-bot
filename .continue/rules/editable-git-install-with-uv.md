@@ -1,9 +1,11 @@
 # Editable Git Install with uv
 
 ---
+
 description: Instructions for installing a Python package in editable mode from
   a Git repository using uv pip.
 alwaysApply: true
+
 ---
 
 To install an editable Python package from a Git repository using uv:
