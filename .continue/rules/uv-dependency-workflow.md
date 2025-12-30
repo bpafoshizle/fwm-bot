@@ -1,10 +1,8 @@
-# uv Dependency Workflow
-
 ---
-
 description: Explain the correct workflow for adding a new Python dependency using uv.
 alwaysApply: true
-
 ---
 
-To add a new dependency, first manually add it to the `dependencies` list in `pyproject.toml`. Then, update the lock file by running `uv pip compile pyproject.toml -o requirements.txt`. Finally, install the updated dependencies into your environment with `uv sync -r requirements.txt`.
+# uv-dependency-workflow
+
+To add a new dependency, first manually add it to the `dependencies` list in `pyproject.toml`. Update the uv.lock file by running `uv sync`. Then, update the pip-style requirements file (used by the github actions CI file) by running `uv pip compile pyproject.toml -o requirements.txt`.
