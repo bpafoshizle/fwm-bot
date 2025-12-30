@@ -2022,7 +2022,7 @@ wheels = [
 [[package]]
 name = "pydiscogs"
 version = "0.5.2"
-source = { git = "https://github.com/bpafoshizle/pydiscogs?rev=main#a186fb4640399aa0bbe1e3e49402a11a2dd3aa64" }
+source = { git = "https://github.com/bpafoshizle/pydiscogs?rev=main#76c6e0788e9b11e5c03fb11c9d60388496c1a14b" }
 dependencies = [
     { name = "asyncpraw" },
     { name = "audioop-lts" },
