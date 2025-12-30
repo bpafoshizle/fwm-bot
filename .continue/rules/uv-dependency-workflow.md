@@ -1,3 +1,5 @@
+# uv-dependency-workflow
+
 ---
 description: Explain the correct workflow for adding a new Python dependency using uv.
 alwaysApply: true
