@@ -285,7 +285,7 @@ langchain-core==1.2.5
     #   langgraph-checkpoint
     #   langgraph-prebuilt
     #   pydiscogs
-langchain-google-genai==3.0.0
+langchain-google-genai==3.2.0
     # via pydiscogs
 langchain-groq==1.1.1
     # via pydiscogs
@@ -298,8 +298,10 @@ langgraph==1.0.5
 langgraph-checkpoint==2.1.2
     # via
     #   langgraph
+    #   langgraph-checkpoint-postgres
     #   langgraph-prebuilt
-    #   pydiscogs
+langgraph-checkpoint-postgres==3.0.4
+    # via pydiscogs
 langgraph-prebuilt==1.0.5
     # via
     #   langgraph
@@ -395,6 +397,7 @@ opentelemetry-semantic-conventions==0.58b0
     #   opentelemetry-sdk
 orjson==3.11.4
     # via
+    #   langgraph-checkpoint-postgres
     #   langgraph-sdk
     #   langsmith
 ormsgpack==1.11.0
@@ -458,6 +461,14 @@ protobuf==5.29.5
     #   proto-plus
     #   xai-sdk
     #   yfinance
+psycopg==3.3.2
+    # via
+    #   langgraph-checkpoint-postgres
+    #   pydiscogs
+psycopg-binary==3.3.2
+    # via psycopg
+psycopg-pool==3.3.0
+    # via langgraph-checkpoint-postgres
 py-cord==2.6.1
     # via
     #   app (pyproject.toml)
@@ -493,7 +504,7 @@ pydantic-core==2.41.4
     # via pydantic
 pydantic-settings==2.11.0
     # via mcp
-pydiscogs @ git+https://github.com/bpafoshizle/pydiscogs@f6725c5328f78e0c88104fb9618a578d35f343a6
+pydiscogs @ git+https://github.com/bpafoshizle/pydiscogs@b2954ae4cc7656bc4dc112031e07245d559e6972
     # via app (pyproject.toml)
 pyjwt==2.10.1
     # via mcp
@@ -606,6 +617,7 @@ typing-extensions==4.15.0
     #   opentelemetry-resourcedetector-gcp
     #   opentelemetry-sdk
     #   opentelemetry-semantic-conventions
+    #   psycopg-pool
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
